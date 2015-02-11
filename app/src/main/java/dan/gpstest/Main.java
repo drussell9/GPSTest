@@ -5,25 +5,25 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 
 
-public class Main extends ActionBarActivity implements {
+public class Main
+        extends ActionBarActivity
+        implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Drive.API)
-                .addScope(Drive.SCOPE_FILE)
-                .addConnectionCallbacks((GoogleApiClient.ConnectionCallbacks) this)
-                .addOnConnectionFailedListener((GoogleApiClient.OnConnectionFailedListener) this)
-                .addApi(LocationServices.API)
-                .build();
-            mGoogleApiClient.connect();
+
+
     }
 
 
@@ -49,6 +49,30 @@ public class Main extends ActionBarActivity implements {
         return super.onOptionsItemSelected(item);
     }
 
+    protected synchronized void buildGoogleApiClient(){
+        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Drive.API)
+                .addScope(Drive.SCOPE_FILE)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+
+    }
 
 
+    @Override
+    public void onConnected(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
 }
