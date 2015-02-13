@@ -1,5 +1,6 @@
 package dan.gpstest;
 
+import android.location.Location;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -18,11 +19,13 @@ public class Main
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
+    GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this);
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
     }
 
@@ -50,7 +53,7 @@ public class Main
     }
 
     protected synchronized void buildGoogleApiClient(){
-        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
+     mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Drive.API)
                 .addScope(Drive.SCOPE_FILE)
                 .addConnectionCallbacks(this)
@@ -62,8 +65,12 @@ public class Main
 
 
     @Override
-    public void onConnected(Bundle bundle) {
-
+    public void onConnected(Bundle connectionHint) {
+        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (mLastLocation != null){
+            mLatitudeText.setText(String.valueOf(mLastLocation.getLatitude()));
+            mLongitudeText.setText(String.valueOf(mLastLocation.getLongitude()));
+        }
     }
 
     @Override
